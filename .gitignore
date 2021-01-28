@@ -1,0 +1,6 @@
+.idea/
+target/
+src/data/gold_data/*.xml
+src/data/output_files/*.xml
+logs/
+*.iml
