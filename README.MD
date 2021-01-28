@@ -1,4 +1,4 @@
-###### **Module for comparing two XML files ignoring some text differences between <cite.query> tags**
+### **Module for comparing two XML files ignoring some text differences between <cite.query> tags**
 
 
 Steps to run the project:
