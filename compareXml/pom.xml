@@ -13,6 +13,7 @@
 
     <properties>
         <xmlunit.version>2.8.2</xmlunit.version>
+        <zip4j.version>2.6.4</zip4j.version>
     </properties>
 
     <dependencies>
@@ -26,6 +27,11 @@
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-matchers</artifactId>
             <version>${xmlunit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>${zip4j.version}</version>
         </dependency>
     </dependencies>
 
