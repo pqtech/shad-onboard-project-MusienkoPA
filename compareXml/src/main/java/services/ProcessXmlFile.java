@@ -10,27 +10,27 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class ProcessXmlFile {
-    final static Logger logger = Logger.getLogger(ProcessXmlFile.class);
+    final static Logger loggerDebug = Logger.getLogger("debugLogFile");
+    final static Logger loggerError = Logger.getLogger("errorLogFile");
 
-    public static Source getProcessedXmlFile(String pathToFile, String tagToIgnoreText) {
-
-        String regex1 = "(<" + tagToIgnoreText + ".*?>)(.*?)(</" + tagToIgnoreText + ">)";
-        String regex2 = "(</" + tagToIgnoreText + "[^<]*>)([^<]*)(<" + tagToIgnoreText + ".*?>)";
+    public static Source getProcessedXmlFile(String pathToFile, String tagToIgnore) {
         String strFile = "";
 
         try {
             strFile = new String(Files.readAllBytes(Paths.get(pathToFile)),
                     StandardCharsets.UTF_8);
-            logger.debug("File " + pathToFile + " was successfully read");
+            loggerDebug.debug("File " + pathToFile + " was successfully read");
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("File " + pathToFile + " wasn't opened. Error text: " + e);
+            loggerError.error("File " + pathToFile + " wasn't opened. Error text: " + e);
         }
 
         String processedStrFile = "";
-        processedStrFile = strFile.replaceAll(regex1, "$1$3")
-                .replaceAll(regex2, "$1$3");
 
+        // Replacing tag format for the element which should be ignored by XMLUnit but
+        // text inside the element will be compared anyway as a part of a parent element
+        processedStrFile = strFile.replaceAll("<" + tagToIgnore, "[" + tagToIgnore)
+                .replaceAll("</" + tagToIgnore + ">", "[/" + tagToIgnore + "]");
         Source processedFile = Input.fromString(processedStrFile).build();
 
         return processedFile;
