@@ -7,7 +7,7 @@ public class DataProviders {
     protected static final String PATH_TO_GOLD_DATA_FOLDER = "src/data/gold_data/";
     protected static final String PATH_TO_OUTPUT_FILES_FOLDER = "src/data/output_files/";
 
-    @DataProvider(name = "A/B xml files")
+    @DataProvider(name = "A/B xml files", parallel = true)
     public static Object[][] xmlFilesPathsData() {
 
         File[] goldFolderFiles = new File(PATH_TO_GOLD_DATA_FOLDER)
