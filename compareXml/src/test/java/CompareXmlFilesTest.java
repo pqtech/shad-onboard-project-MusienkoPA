@@ -11,30 +11,32 @@ import services.ProcessZipFile;
 public class CompareXmlFilesTest {
     final static Logger loggerError = Logger.getLogger("errorLogFile");
 
-    private static final String PATH_TO_FILE_A = "src/data/gold_data/A.xml";
-    private static final String PATH_TO_FILE_B = "src/data/output_files/B.xml";
     private static final String TAG_TO_IGNORE = "cite.query";
     private static final String PATH_TO_ZIP_FILE = "../Files.zip";
-    private static final String PATH_TO_GOLD_DATA_FOLDER = "src/data/gold_data/";
-    private static final String PATH_TO_OUTPUT_FILES_FOLDER = "src/data/output_files/";
 
     @BeforeSuite
     public void setUp() {
-        ProcessZipFile.unpackFilesAB(PATH_TO_ZIP_FILE, PATH_TO_GOLD_DATA_FOLDER, PATH_TO_OUTPUT_FILES_FOLDER);
+        ProcessZipFile.unpackFilesAB(PATH_TO_ZIP_FILE,
+                DataProviders.PATH_TO_GOLD_DATA_FOLDER,
+                DataProviders.PATH_TO_OUTPUT_FILES_FOLDER);
     }
 
-    @Test
-    public void compareTwoXmlFilesTest() {
+    @Test(dataProviderClass = DataProviders.class, dataProvider = "A/B xml files")
+    public void compareTwoXmlFilesTest(String pathToFileA, String pathToFileB) {
         // Comparing two XML files
-        Diff diff = DiffBuilder.compare(ProcessXmlFile.getProcessedXmlFile(PATH_TO_FILE_A, TAG_TO_IGNORE))
-                .withTest(ProcessXmlFile.getProcessedXmlFile(PATH_TO_FILE_B, TAG_TO_IGNORE))
+        Diff diff = DiffBuilder.compare(ProcessXmlFile.getProcessedXmlFile(pathToFileA, TAG_TO_IGNORE))
+                .withTest(ProcessXmlFile.getProcessedXmlFile(pathToFileB, TAG_TO_IGNORE))
                 .ignoreWhitespace()
                 .checkForIdentical()
                 .build();
 
         // Logging differences after replacing original tags back
+        int currentDiff = 0;
         for (Difference d : diff.getDifferences()) {
-            loggerError.error(d.toString().replaceAll("\\[" + TAG_TO_IGNORE, "<" + TAG_TO_IGNORE)
+            currentDiff++;
+            loggerError.error("File [" + pathToFileA + "] and file [" + pathToFileB + "], difference #" +
+                    currentDiff + ":\n" + d.toString()
+                    .replaceAll("\\[" + TAG_TO_IGNORE, "<" + TAG_TO_IGNORE)
                     .replaceAll("\\[/" + TAG_TO_IGNORE + "\\]", "</" + TAG_TO_IGNORE + ">"));
         }
 
