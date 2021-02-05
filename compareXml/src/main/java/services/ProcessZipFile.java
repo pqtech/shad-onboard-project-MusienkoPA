@@ -5,8 +5,8 @@ import net.lingala.zip4j.exception.ZipException;
 import org.apache.log4j.Logger;
 
 public class ProcessZipFile {
-    final static Logger loggerDebug = Logger.getLogger("debugLogFile");
-    final static Logger loggerError = Logger.getLogger("errorLogFile");
+    static final Logger loggerDebug = Logger.getLogger("debugLogFile");
+    static final Logger loggerError = Logger.getLogger("errorLogFile");
 
     public static void unpackFilesAB(String pathToZipFile,
                                      String pathToGoldDataFolder,

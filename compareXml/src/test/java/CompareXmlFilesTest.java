@@ -9,7 +9,7 @@ import services.ProcessXmlFile;
 import services.ProcessZipFile;
 
 public class CompareXmlFilesTest {
-    final static Logger loggerError = Logger.getLogger("errorLogFile");
+    static final Logger loggerError = Logger.getLogger("errorLogFile");
 
     private static final String TAG_TO_IGNORE = "cite.query";
     private static final String PATH_TO_ZIP_FILE = "../Files.zip";
@@ -24,7 +24,8 @@ public class CompareXmlFilesTest {
     @Test(dataProviderClass = DataProviders.class, dataProvider = "A/B xml files")
     public void compareTwoXmlFilesTest(String pathToFileA, String pathToFileB) {
         // Comparing two XML files
-        Diff diff = DiffBuilder.compare(ProcessXmlFile.getProcessedXmlFile(pathToFileA, TAG_TO_IGNORE))
+        Diff diff = DiffBuilder.compare(ProcessXmlFile
+                .getProcessedXmlFile(pathToFileA, TAG_TO_IGNORE))
                 .withTest(ProcessXmlFile.getProcessedXmlFile(pathToFileB, TAG_TO_IGNORE))
                 .ignoreWhitespace()
                 .checkForIdentical()
@@ -34,8 +35,9 @@ public class CompareXmlFilesTest {
         int currentDiff = 0;
         for (Difference d : diff.getDifferences()) {
             currentDiff++;
-            loggerError.error("File [" + pathToFileA + "] and file [" + pathToFileB + "], difference #" +
-                    currentDiff + ":\n" + d.toString()
+            loggerError.error("File [" + pathToFileA + "] and file [" + pathToFileB
+                    + "], difference #"
+                    + currentDiff + ":\n" + d.toString()
                     .replaceAll("\\[" + TAG_TO_IGNORE, "<" + TAG_TO_IGNORE)
                     .replaceAll("\\[/" + TAG_TO_IGNORE + "\\]", "</" + TAG_TO_IGNORE + ">"));
         }

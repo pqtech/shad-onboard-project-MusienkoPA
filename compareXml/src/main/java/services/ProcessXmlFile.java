@@ -10,8 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class ProcessXmlFile {
-    final static Logger loggerDebug = Logger.getLogger("debugLogFile");
-    final static Logger loggerError = Logger.getLogger("errorLogFile");
+    static final Logger loggerDebug = Logger.getLogger("debugLogFile");
+    static final Logger loggerError = Logger.getLogger("errorLogFile");
 
     public static Source getProcessedXmlFile(String pathToFile, String tagToIgnore) {
         String strFile = "";
