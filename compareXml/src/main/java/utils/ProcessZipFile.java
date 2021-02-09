@@ -1,4 +1,4 @@
-package services;
+package utils;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -10,7 +10,9 @@ public class ProcessZipFile {
 
     public static void unpackFilesAB(String pathToZipFile,
                                      String pathToGoldDataFolder,
-                                     String pathToOutputFilesFolder) {
+                                     String pathToOutputFilesFolder,
+                                     String sortRegexFileA,
+                                     String sortRegexFileB) {
         ZipFile zipFile = new ZipFile(pathToZipFile);
         loggerDebug.debug("Current zip file is valid: " + zipFile.isValidZipFile());
 
@@ -19,10 +21,10 @@ public class ProcessZipFile {
             for (int i = 1; i < zipFile.getFileHeaders().size(); i++) {
                 String currentFileName = zipFile.getFileHeaders().get(i).getFileName();
 
-                if (currentFileName.matches(".*?A[\\d]*.xml")) {
+                if (currentFileName.matches(sortRegexFileA)) {
                     zipFile.extractFile(currentFileName, pathToGoldDataFolder,
                             currentFileName.replaceAll("Files/", ""));
-                } else if (currentFileName.matches(".*?B[\\d]*.xml")) {
+                } else if (currentFileName.matches(sortRegexFileB)) {
                     zipFile.extractFile(currentFileName, pathToOutputFilesFolder,
                             currentFileName.replaceAll("Files/", ""));
                 } else {
