@@ -8,11 +8,20 @@ public class ProcessZipFile {
     static final Logger loggerDebug = Logger.getLogger("debugLogFile");
     static final Logger loggerError = Logger.getLogger("errorLogFile");
 
-    public static void unpackFilesAB(String pathToZipFile,
-                                     String pathToGoldDataFolder,
-                                     String pathToOutputFilesFolder,
-                                     String sortRegexFileA,
-                                     String sortRegexFileB) {
+    private static ProcessZipFile instance = new ProcessZipFile();
+
+    public static ProcessZipFile getInstance() {
+        if (instance == null) {
+            instance = new ProcessZipFile();
+        }
+        return instance;
+    }
+
+    public void unpackFilesAB(String pathToZipFile,
+                              String pathToGoldDataFolder,
+                              String pathToOutputFilesFolder,
+                              String sortRegexFileA,
+                              String sortRegexFileB) {
         ZipFile zipFile = new ZipFile(pathToZipFile);
         loggerDebug.debug("Current zip file is valid: " + zipFile.isValidZipFile());
 
