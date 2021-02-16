@@ -13,7 +13,20 @@ public class ProcessXmlFile {
     static final Logger loggerDebug = Logger.getLogger("debugLogFile");
     static final Logger loggerError = Logger.getLogger("errorLogFile");
 
-    public static Source getProcessedXmlFile(String pathToFile, String tagToIgnore) {
+    private static ProcessXmlFile instance = new ProcessXmlFile();
+
+    private ProcessXmlFile() {
+
+    }
+
+    public static ProcessXmlFile getInstance() {
+        if (instance == null) {
+            instance = new ProcessXmlFile();
+        }
+        return instance;
+    }
+
+    public Source getProcessedXmlFile(String pathToFile, String tagToIgnore) {
         String strFile = "";
 
         try {
