@@ -10,6 +10,10 @@ public class ProcessZipFile {
 
     private static ProcessZipFile instance = new ProcessZipFile();
 
+    private ProcessZipFile() {
+
+    }
+
     public static ProcessZipFile getInstance() {
         if (instance == null) {
             instance = new ProcessZipFile();
