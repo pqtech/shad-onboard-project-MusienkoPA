@@ -1,6 +1,5 @@
 import customDifferenceEvaluators.DifferenceEvaluatorWithLogger;
 import customExceptions.InvalidPairException;
-import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 import org.xmlunit.builder.DiffBuilder;
@@ -9,10 +8,8 @@ import utils.ProcessXmlFile;
 import utils.ProcessZipFile;
 
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.fail;
 
 public class CompareXmlFilesTest {
-    static final Logger loggerError = Logger.getLogger("errorLogFile");
 
     private static final String TAG_TO_IGNORE = "cite.query";
     private static final String PATH_TO_ZIP_FILE = "../Files.zip";
@@ -21,7 +18,7 @@ public class CompareXmlFilesTest {
 
     @BeforeSuite
     public void setUp() {
-        ProcessZipFile processZipFile = new ProcessZipFile();
+        ProcessZipFile processZipFile = ProcessZipFile.getInstance();
         processZipFile.unpackFilesAB(PATH_TO_ZIP_FILE,
                 DataProviders.PATH_TO_GOLD_DATA_FOLDER,
                 DataProviders.PATH_TO_OUTPUT_FILES_FOLDER,
@@ -34,17 +31,17 @@ public class CompareXmlFilesTest {
         String pathToFileA = DataProviders.PATH_TO_GOLD_DATA_FOLDER + nameFileA;
         String pathToFileB = DataProviders.PATH_TO_OUTPUT_FILES_FOLDER + nameFileB;
 
-        try {
-            filesArePairValidate(nameFileA, nameFileB);
-        } catch (Exception e) {
-            loggerError.error(e.toString());
-            fail(e.toString());
+        if (nameFileA.equals("none")) {
+            throw new InvalidPairException(nameFileB);
+        } else if (nameFileB.equals("none")) {
+            throw new InvalidPairException(nameFileA);
         }
 
         // Comparing two XML files
-        Diff diff = DiffBuilder.compare(ProcessXmlFile
+        ProcessXmlFile processXmlFile = ProcessXmlFile.getInstance();
+        Diff diff = DiffBuilder.compare(processXmlFile
                 .getProcessedXmlFile(pathToFileA, TAG_TO_IGNORE))
-                .withTest(ProcessXmlFile.getProcessedXmlFile(pathToFileB, TAG_TO_IGNORE))
+                .withTest(processXmlFile.getProcessedXmlFile(pathToFileB, TAG_TO_IGNORE))
                 .withDifferenceEvaluator(new DifferenceEvaluatorWithLogger(pathToFileA, pathToFileB, TAG_TO_IGNORE))
                 .ignoreWhitespace()
                 .checkForIdentical()
@@ -52,13 +49,5 @@ public class CompareXmlFilesTest {
 
         assertFalse(diff.hasDifferences(), "There are differences between file "
                 + nameFileA + " and " + nameFileB + ". Check /log/error.log file for details.");
-    }
-
-    private void filesArePairValidate(String nameFileA, String nameFileB) throws InvalidPairException {
-        if (nameFileA.equals("none")) {
-            throw new InvalidPairException("File " + nameFileB + " doesn't have a pair to compare with.");
-        } else if (nameFileB.equals("none")) {
-            throw new InvalidPairException("File " + nameFileA + " doesn't have a pair to compare with.");
-        }
     }
 }
